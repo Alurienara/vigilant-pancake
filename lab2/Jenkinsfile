@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'python3 -m pip install --upgrade pip'
+                sh 'python3 -m pip install -r lab2/requirements.txt'
+            }
+        }
+
+        stage('Data Copy') {
+            steps {
+                dir('lab2') {
+                    sh 'python3 data_copy.py'
+                }
+            }
+        }
+
+        stage('Preprocess Data') {
+            steps {
+                dir('lab2') {
+                    sh 'python3 data_preprocessing.py'
+                }
+            }
+        }
+
+        stage('Train Model') {
+            steps {
+                dir('lab2') {
+                    sh 'python3 model_training.py'
+                }
+            }
+        }
+
+        stage('Evaluate Model') {
+            steps {
+                dir('lab2') {
+                    sh 'python3 model_evaluate.py'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'lab2/model/model.pkl', fingerprint: true
+            archiveArtifacts artifacts: 'lab2/data/processed/*.csv', fingerprint: true
+        }
+    }
+}
