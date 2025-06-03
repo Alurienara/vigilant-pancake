@@ -4,15 +4,16 @@ import pandas as pd
 import pickle
 from sklearn.linear_model import LinearRegression
 
-# Пути
 BASE_DIR = os.path.dirname(__file__)
 TRAIN_DIR = os.path.join(BASE_DIR, "train")
 MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
 
 def load_train_data():
+
     """
     Считывает все CSV из train/, возвращает X_train (матрица [[t]]), y_train (вектор).
     """
+
     paths = sorted(glob.glob(os.path.join(TRAIN_DIR, "*.csv")))
     df_list = []
     for path in paths:
@@ -27,12 +28,8 @@ def load_train_data():
 
 def main():
     X_train, y_train = load_train_data()
-
-    # 1) Инициализируем и обучаем модель
     model = LinearRegression()
     model.fit(X_train, y_train)
-
-    # 2) Сохраняем её через pickle
     with open(MODEL_PATH, "wb") as f:
         pickle.dump(model, f)
 

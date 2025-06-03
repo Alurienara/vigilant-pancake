@@ -22,10 +22,12 @@ def make_dirs():
     os.makedirs(OUTPUT_DIR_TEST, exist_ok=True)
 
 def generate_series(length, noise_level, with_anomalies):
+    
     """
     Генерирует синтетический временной ряд:
     y = sin(2π * t / T) + шум (+ опционально выбросы)
     """
+
     t = np.arange(length)
     T = 50  # период синуса
     base = np.sin(2 * np.pi * t / T)
@@ -33,7 +35,6 @@ def generate_series(length, noise_level, with_anomalies):
     series = base + noise
 
     if with_anomalies:
-        # добавим несколько выбросов (+5 или −5) в случайных точках
         num_anoms = max(1, length // 50)
         indices = np.random.choice(length, size=num_anoms, replace=False)
         for idx in indices:
@@ -41,9 +42,11 @@ def generate_series(length, noise_level, with_anomalies):
     return series
 
 def save_series(series, prefix, folder):
+
     """
     Сохраняет один набор в формате CSV: первый столбец — индекс t, второй — значение y.
     """
+
     df = pd.DataFrame({
         "t": np.arange(len(series)),
         "y": series
@@ -55,12 +58,10 @@ def save_series(series, prefix, folder):
 def main():
     make_dirs()
 
-    # Генерация train-файлов
     for name, noise, anom in TRAIN_FILES:
         arr = generate_series(NUM_SAMPLES, noise, anom)
         save_series(arr, name, OUTPUT_DIR)
 
-    # Генерация test-файлов
     for name, noise, anom in TEST_FILES:
         arr = generate_series(NUM_SAMPLES, noise, anom)
         save_series(arr, name, OUTPUT_DIR_TEST)
