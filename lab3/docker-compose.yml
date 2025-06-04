@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  lr-service:
+    build:
+      context: ..
+      dockerfile: lab3/Dockerfile
+      args:
+        GIT_SHA: ${GIT_SHA:-latest}
+    image: alurienara/lab3_service:${GIT_SHA:-latest}
+    container_name: lab3_service
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
