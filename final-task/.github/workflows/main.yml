@@ -40,3 +40,7 @@ jobs:
     - name: Pytest
       run: pytest
       working-directory: final-task
+
+          - name: Собираем Docker-образ
+      run: docker build -t vigilant-model .
+      working-directory: final-task
