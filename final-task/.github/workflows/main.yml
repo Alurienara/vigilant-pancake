@@ -1,0 +1,42 @@
+name: MLOps CI
+
+on:
+  push:
+    branches: [ final-task ]
+  pull_request:
+    branches: [ final-task ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Клонируем репозиторий
+      uses: actions/checkout@v3
+
+    - name: Устанавливаем Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Устанавливаем зависимости
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r final-task/requirements.txt
+        pip install dvc[s3] pytest
+
+    - name: Инициализируем DVC
+      run: dvc init --subdir
+      working-directory: final-task
+
+    - name: DVC pull
+      run: dvc pull
+      working-directory: final-task
+
+    - name: DVC Repro
+      run: dvc repro
+      working-directory: final-task
+
+    - name: Pytest
+      run: pytest
+      working-directory: final-task
