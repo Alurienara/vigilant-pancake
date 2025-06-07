@@ -1,4 +1,10 @@
 [core]
-    remote = gdrive_storage
+    remote = minio
 ['remote "gdrive_storage"']
     url = gdrive://1Sv5QIonWIJpCIm2imTJ2Jk74M2sDou1p
+['remote "minio"']
+    url = s3://lab4-data
+    endpointurl = http://127.0.0.1:9000
+    access_key_id = minioadmin
+    secret_access_key = minioadmin
+    use_ssl = false
